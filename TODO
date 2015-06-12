@@ -1,0 +1,110 @@
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Tradurre in inglese questo file
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Tradurre in inglese i commenti nel sorgente e tutta la documentazione
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Migliorare la documentazione
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Migliorare la qualità del codice
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Possibilità di settare l'intervallo degli indirizzi IP da assegnare con
+Frubee
+Codice del sorgente interessato:
+	per indirizzo iniziale: "k=0;"
+	per indirizzo finale: "while ( i <= 254 )"
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Gestione Subnet Mask
+Ora è sempre "255.255.255.0"
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Ottimizzare la gestione della variabile "run_from_boot".
+Per approfondimento vedi nel sorgente le note relative alla variabile
+"run_from_boot".
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Nel dialog box in cui va selezionata la Nazione, non mettere la testata.
+La frase "Choose the country of your telephone provider" (e per tutte 
+le altre nazioni) mostrala sulla stessa riga del nome della Nazione.
+
+Adesso
+-Wahlen Sie das Land Ihres Telefon-Providers
+-Choisissez le pays de votre operateur de telephonie
+-Scegli il Paese del tuo operatore telefonico
+-Choose the country of your telephone provider
+-Choose the country of your telephone provider
++------------------------------------------------------+
+|                  Deutschland                         |
+|                  France                              |
+|                  Italia                              |
+|                  United Kingdom                      |
+|                  USA                                 |
++------------------------------------------------------+
+
+Nuovo
++----------------------------------------------------------------------+
+| Wahlen Sie das Land Ihres Telefon-Providers          Deutschland     |
+| Choisissez le pays de votre operateur de telephonie  France          |
+| Scegli il Paese del tuo operatore telefonico         Italia          |
+| Choose the country of your telephone provider        United Kingdom  |
+| Choose the country of your telephone provider        USA             |
++----------------------------------------------------------------------+
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Ottimizzazione della gestione dell'errore (codice errore,messaggio): 
+quando c'è un qualsiasi errore il programma ritorna sempre 1.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Frubee è nato come script shell per GNU/Linux. Poi ho pensato che 
+avrebbe avuto più potenzialità di sviluppo (vedi la possibilità di usare
+la libreria libpcap) se fosse scritto in C/C++. 
+Una volta passato a C++ ho continuato comunque a sviluppare usando i 
+comandi shell.
+
+Per questo motivo il sorgente è farcito di comandi shell di cui vorrei 
+ridurre l'uso, sostituendoli con le funzioni della libreria standard del
+"C".
+
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Passaggio da C++ a C
+
+Sostituisci:
+isspace		va messo "#include <ctype.h>"
+string
+cout
+endl
+sleep
+cin
+
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Ho fatto molte prove con 4 client che in contemporanea richiedono 
+l'indirizzo IP e si connettono al router: non si è mai verificato un 
+conflitto di indirizzi IP.
+Sarebbe interessante provare con 20 client o più in contemporanea.
+
+Riduzione dei tempi di assegnazione dell'indirizzo IP
+Adesso per determinare il numero della quarta terzina, il ciclo parte da 
+1 (o comunque sempre dallo stesso numero). 
+Ci dovrebbe essere la possibilità di far determinare in modo casuale il
+numero iniziale con cui cominciare la ricerca dell'indirizzo IP libero.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------

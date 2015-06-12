@@ -1,0 +1,5 @@
+router.automatic                        #10I#Router - Automatic                      #10F#
+router.dlink                            #10I#Router - D-Link                         #10F#
+router.netgear                          #10I#Router - Netgear                        #10F#
+router.sitecom                          #10I#Router - Sitecom                        #10F#
+router.belkin                           #10I#Router - Belkin                         #10F#

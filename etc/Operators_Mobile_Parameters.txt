@@ -1,0 +1,3 @@
+italia.tim                                                  ibox.tim.it         NOW.DNS1.NOT.USED   NOW.DNS2.NOT.USED   X
+italia.vodafone                                             web.omnitel.it      NOW.DNS1.NOT.USED   NOW.DNS2.NOT.USED   X
+italia.wind                                                 internet.wind       NOW.DNS1.NOT.USED   NOW.DNS2.NOT.USED   X

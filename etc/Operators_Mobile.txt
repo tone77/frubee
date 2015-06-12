@@ -1,0 +1,3 @@
+224       Mobile - Tim                            italia.tim                                                  1    X
+224       Mobile - Vodafone                       italia.vodafone                                             1    X
+224       Mobile - Wind                           italia.wind                                                 1    X
