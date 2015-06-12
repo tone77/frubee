@@ -98,6 +98,12 @@ For details read below.
 Once restored the original configuration, PC could have another IP address.
 
 
+Try Frubee on Precise Puppy 5.7.1
+------------------------------------------------------------------------------
+If you want to try Frubee on Precise Puppy 5.7.1 read the following URL:
+http://murga-linux.com/puppy/viewtopic.php?t=99766
+
+
 License
 ------------------------------------------------------------------------------
 See COPYING for license information.
