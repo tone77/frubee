@@ -1,45 +1,42 @@
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Translate into English this file
+Translate into English the comments in the source and all the 
+documentation
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Tradurre in inglese i commenti nel sorgente e tutta la documentazione
+Improve the documentation
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Migliorare la documentazione
+Improve code quality
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Migliorare la qualità del codice
-
-------------------------------------------------------------------------
-------------------------------------------------------------------------
-Possibilità di settare l'intervallo degli indirizzi IP da assegnare con
+Possibility to set the range of the IP addresses to be assigned with
 Frubee
-Codice del sorgente interessato:
-	per indirizzo iniziale: "k=0;"
-	per indirizzo finale: "while ( i <= 254 )"
+Source code to be modified:
+	for the starting address: "k=0;"
+	for the ending address: "while ( i <= 254 )"
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Gestione Subnet Mask
-Ora è sempre "255.255.255.0"
+Subnet Mask management
+Now it's always "255.255.255.0"
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Ottimizzare la gestione della variabile "run_from_boot".
-Per approfondimento vedi nel sorgente le note relative alla variabile
+Optimize the management of the variable "run_from_boot".
+For deepening, see in the source the notes relating to the variable
 "run_from_boot".
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Nel dialog box in cui va selezionata la Nazione, non mettere la testata.
-La frase "Choose the country of your telephone provider" (e per tutte 
-le altre nazioni) mostrala sulla stessa riga del nome della Nazione.
+In the dialog box, where you select the nation: show, on the same line
+of the name of the nation, the phrase "Choose the country of your
+telephone provider" (and for all other nations).
 
-Adesso
+Now
 -Wahlen Sie das Land Ihres Telefon-Providers
 -Choisissez le pays de votre operateur de telephonie
 -Scegli il Paese del tuo operatore telefonico
@@ -53,7 +50,7 @@ Adesso
 |                  USA                                 |
 +------------------------------------------------------+
 
-Nuovo
+New
 +----------------------------------------------------------------------+
 | Wahlen Sie das Land Ihres Telefon-Providers          Deutschland     |
 | Choisissez le pays de votre operateur de telephonie  France          |
@@ -64,28 +61,26 @@ Nuovo
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Ottimizzazione della gestione dell'errore (codice errore,messaggio): 
-quando c'è un qualsiasi errore il programma ritorna sempre 1.
+Optimization of the error management (error code, error message): 
+when there's an error, the program always returns 1.
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Frubee è nato come script shell per GNU/Linux. Poi ho pensato che 
-avrebbe avuto più potenzialità di sviluppo (vedi la possibilità di usare
-la libreria libpcap) se fosse scritto in C/C++. 
-Una volta passato a C++ ho continuato comunque a sviluppare usando i 
-comandi shell.
+Frubee was born as a shell script for GNU/Linux. Then I thought it would
+have more potential for the development (see the possibility to use the 
+library "libpcap") if it was written in C/C++. 
+Once passed to C++, I continued to develop using the shell commands.
 
-Per questo motivo il sorgente è farcito di comandi shell di cui vorrei 
-ridurre l'uso, sostituendoli con le funzioni della libreria standard del
-"C".
-
+For this reason the source is stuffed of shell commands of which I would
+like to reduce the use, replacing them with the standard library
+functions of the "C".
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Passaggio da C++ a C
+From C++ to C
 
-Sostituisci:
-isspace		va messo "#include <ctype.h>"
+Replace:
+isspace		insert "#include <ctype.h>"
 string
 cout
 endl
@@ -95,16 +90,16 @@ cin
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Ho fatto molte prove con 4 client che in contemporanea richiedono 
-l'indirizzo IP e si connettono al router: non si è mai verificato un 
-conflitto di indirizzi IP.
-Sarebbe interessante provare con 20 client o più in contemporanea.
+I made many tests with 4 client which at the same time require the IP 
+address and will connect to the router: it never was an IP address
+conflict.
+It would be interesting to try 20 client or more simultaneously.
 
-Riduzione dei tempi di assegnazione dell'indirizzo IP
-Adesso per determinare il numero della quarta terzina, il ciclo parte da 
-1 (o comunque sempre dallo stesso numero). 
-Ci dovrebbe essere la possibilità di far determinare in modo casuale il
-numero iniziale con cui cominciare la ricerca dell'indirizzo IP libero.
+Reduction of the times of IP address assignment
+Now to determine the number of the fourth triplet, the loop starts from
+1 (or however from the same number).
+There should be the possibility to determine randomly the starting
+number whereby starts the search for free IP address.
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
