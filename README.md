@@ -32,7 +32,7 @@ assigned the same IP address of another client.
 
 Installation
 ------------------------------------------------------------------------------
-From shell, run the script "install.sh"
+From shell, run the script "install.sh" (you must be root)
 
 To build Frubee:
  - C++ compiler (install.sh use "g++")
