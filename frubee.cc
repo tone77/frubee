@@ -292,7 +292,6 @@ int F_CreatesScriptSelectNation()
 
 	char list[2500] = "";		
 	char* str_to_export;		
-	char phrases_select_nation[2500] = "";		
 	char file_nations[200];
 	char path_file[40] = "";
 
@@ -373,11 +372,9 @@ int F_CreatesScriptSelectNation()
 		strcat(list,"\" ");
 
 		//Secondo Parametro
-		strcat(list,"\"\"  ");
-
-		strcat(phrases_select_nation,"\"-");
-		strcat(phrases_select_nation,r.Phrase_Select_Nation);
-		strcat(phrases_select_nation,"\\n\"");
+		strcat(list,"\"");
+		strcat(list,r.Phrase_Select_Nation);
+		strcat(list,"\"  ");
 
 	}
 
@@ -386,13 +383,10 @@ int F_CreatesScriptSelectNation()
 	fprintf (file_script, "%-s\n", str_to_export);
 
 	//2° Row
-	//--aspect : larghezza (nella variabile "phrases_select_nation"
-	// ho "\n" (a capo), quindi --aspect non viene considerato)
-	//io l'ho messo lo stesso...
-	str_to_export="dialog --aspect 40 --no-cancel --menu ";
+	str_to_export="dialog --no-cancel --menu ";
 	fprintf (file_script, "%-s", str_to_export);
 
-	fprintf (file_script, "%-s", phrases_select_nation);	
+	fprintf (file_script, "%-s", "\"Frubee\"");	
 	
 	str_to_export=" 0 0 0 \\";
 	fprintf (file_script, "%-s\n", str_to_export);	
@@ -1337,7 +1331,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 0.1.0");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 0.2.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
