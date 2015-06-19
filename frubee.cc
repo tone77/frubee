@@ -1337,7 +1337,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 0.01");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 0.1.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2576,6 +2576,11 @@ int main(int argc, char* argv[])
 		cout << "Show only the selection of the Operator:" << endl;	
 		cout << "   " << argv[0] << " \"Nation\" \"0\" 0" << endl;	
 		cout << "" << endl;
+
+		cout << "" << endl;
+		cout << "For use during the operating system boot you have to redirect it properly." << endl;
+		cout << "" << endl;
+
 
 		return 1;
 	}
