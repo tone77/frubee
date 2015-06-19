@@ -32,35 +32,6 @@ For deepening, see in the source the notes relating to the variable
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-In the dialog box, where you select the nation: show, on the same line
-of the name of the nation, the phrase "Choose the country of your
-telephone provider" (and for all other nations).
-
-Now
--Wahlen Sie das Land Ihres Telefon-Providers
--Choisissez le pays de votre operateur de telephonie
--Scegli il Paese del tuo operatore telefonico
--Choose the country of your telephone provider
--Choose the country of your telephone provider
-+------------------------------------------------------+
-|                  Deutschland                         |
-|                  France                              |
-|                  Italia                              |
-|                  United Kingdom                      |
-|                  USA                                 |
-+------------------------------------------------------+
-
-New
-+----------------------------------------------------------------------+
-| Wahlen Sie das Land Ihres Telefon-Providers          Deutschland     |
-| Choisissez le pays de votre operateur de telephonie  France          |
-| Scegli il Paese del tuo operatore telefonico         Italia          |
-| Choose the country of your telephone provider        United Kingdom  |
-| Choose the country of your telephone provider        USA             |
-+----------------------------------------------------------------------+
-
-------------------------------------------------------------------------
-------------------------------------------------------------------------
 Optimization of the error management (error code, error message): 
 when there's an error, the program always returns 1.
 
