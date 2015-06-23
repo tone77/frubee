@@ -13,14 +13,6 @@ Improve code quality
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-Possibility to set the range of the IP addresses to be assigned with
-Frubee
-Source code to be modified:
-	for the starting address: "k=0;"
-	for the ending address: "while ( i <= 254 )"
-
-------------------------------------------------------------------------
-------------------------------------------------------------------------
 Subnet Mask management
 Now it's always "255.255.255.0"
 
