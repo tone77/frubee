@@ -9,30 +9,48 @@
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-frubee receives 3 parameters:
-Nation
-Operator
-Run from boot
+frubee receives 5 parameters:
+Nation	
+Operator	
+Fourth triplet start	
+Fourth triplet end	
+Run from boot	
 
-Nation
-   "0" or put a value present in the 2° column of the file 
-   "/etc/Nations.txt"
+
+Nation	
+   "0" or put a value present in the 2° column of the file
+   "/etc/Nations.txt"	
 Operator
    "0" or put a value present in the 2° column (the string between #10I#
    and #10F# when present) of the files "/etc/RouterIPAddressesName.txt"
-   or "/etc/RouterOperatorsIPAddressesName.txt" or "/etc/Operators_Mobile.txt"
-Run from boot
-   0: Not run from boot / 1: Run from boot
+   or "/etc/RouterOperatorsIPAddressesName.txt" or "/etc/Operators_Mobile.txt"	
+Fourth triplet start	
+   0 or put the initial number of the fourth triplet to set the range of
+   the IP addresses to be assigned with Frubee	
+Fourth triplet end	
+   0 or put the final number of the fourth triplet to set the range of 
+   the IP addresses to be assigned with Frubee	
+Run from boot	
+   0: Not run from boot / 1: Run from boot	
+
 
 Examples
 Shows both selections (Nation and Operator):
-   frubee "0" "0" 0
-   frubee "0" "0" 1
-Don't show none selection:
-   frubee "Nation" "Operator" 0
-   frubee "Nation" "Operator" 1
-Show only the selection of the Operator:
-   frubee "Nation" "0" 0
+   frubee "0" "0" 0 0 0	
+   frubee "0" "0" 0 0 1	
+Don't show none selection:	
+   frubee "Nation" "Operator" 0 0 0	
+   frubee "Nation" "Operator" 0 0 1	
+Show only the selection of the Operator:	
+   frubee "Nation" "0" 0 0 0	
+
+
+Not set any interval. The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.1 to xxx.xxx.xxx.254:	
+   frubee "Nation" "Operator" 0 0 0	
+   frubee "0" "0" 0 0 0	
+The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.200 to xxx.xxx.xxx.254:	
+   frubee "Nation" "Operator" 200 254 0	
+   frubee "0" "0" 200 254 0	
 
 For use during the operating system boot you have to redirect it
 properly.
