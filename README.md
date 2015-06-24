@@ -58,7 +58,7 @@ Required programs
 
 To see the explanation of the parameters received, run from shell "frubee"
 
-For deepening, read file README_from_ver_0.3.0
+For deepening, read file README-from-ver-0.3.0
 
 
 If the connection on the client is managed by DHCP: light test
