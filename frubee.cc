@@ -1093,7 +1093,7 @@ int F_FindIPAddressRouter(char* par_name_operator_with_nation, char* &IPAddressR
  * Calcola:
  *     IPLibero : IP da assegnare al client
 */
-int F_FindIPAddressFree(char* IPAddressRouter, int &i)
+int F_FindIPAddressFree(char* IPAddressRouter, int &fourth_triplet_start, int fourth_triplet_end)
 {
 
 	char shell_command[200];	
@@ -1144,9 +1144,10 @@ int F_FindIPAddressFree(char* IPAddressRouter, int &i)
 	//strcpy(shell_command,"rm -f /tmp/elenco_IP_liberi.txt");
 	//system(shell_command);
 
-	while ( i <= 254 )
+
+	while ( fourth_triplet_start <= fourth_triplet_end )
 	{												
-		sprintf(i_char,"%d",i);
+		sprintf(i_char,"%d",fourth_triplet_start);
 		strcpy(IPAddressToCheck,First3Triplets);		
 		strcat(IPAddressToCheck,i_char);				
 
@@ -1189,7 +1190,7 @@ int F_FindIPAddressFree(char* IPAddressRouter, int &i)
 			IPAddressFree=PL_Callback.IPAddress;
 			break;			//Elenco IP liberi (commenta) - debug
 		}
-		i++;   				   						
+		fourth_triplet_start++;   				   						
 	}												
 
 	if  (strcmp(IPAddressFree,"") == 0)
@@ -1331,7 +1332,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 0.2.1");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 0.3.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2544,11 +2545,13 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 int main(int argc, char* argv[])
 {
 	
-	if (argc != 4 ) 
+	if (argc != 6 ) 
 	{
-		cout << "frubee receives 3 parameters:" << endl;	
+		cout << "frubee receives 5 parameters:" << endl;	
 		cout << "Nation" << endl;	
 		cout << "Operator" << endl;	
+		cout << "Fourth triplet start" << endl;	
+		cout << "Fourth triplet end" << endl;	
 		cout << "Run from boot" << endl;	
 
 		cout << "" << endl;
@@ -2556,20 +2559,31 @@ int main(int argc, char* argv[])
 		cout << "   \"0\" or put a value present in the 2° column of the file \"/etc/Nations.txt\"" << endl;	
 		cout << "Operator" << endl;
 		cout << "   \"0\" or put a value present in the 2° column (the string between #10I# and #10F# when present) of the files \"/etc/RouterIPAddressesName.txt\" or \"/etc/RouterOperatorsIPAddressesName.txt\" or \"/etc/Operators_Mobile.txt\"" << endl;	
+		cout << "Fourth triplet start" << endl;	
+		cout << "   0 or put the initial number of the fourth triplet to set the range of the IP addresses to be assigned with Frubee" << endl;	
+		cout << "Fourth triplet end" << endl;	
+		cout << "   0 or put the final number of the fourth triplet to set the range of the IP addresses to be assigned with Frubee" << endl;	
 		cout << "Run from boot" << endl;	
 		cout << "   0: Not run from boot / 1: Run from boot" << endl;	
 
 		cout << "" << endl;
 		cout << "Examples" << endl;
 		cout << "Shows both selections (Nation and Operator):" <<  endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 1" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 0" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 1" << endl;	
 		cout << "Don't show none selection:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 1" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 1" << endl;	
 		cout << "Show only the selection of the Operator:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"0\" 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"0\" 0 0 0" << endl;	
 		cout << "" << endl;
+
+		cout << "Not set any interval. The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.1 to xxx.xxx.xxx.254:" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 0" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 0" << endl;	
+		cout << "The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.200 to xxx.xxx.xxx.254:" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 200 254 0" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 200 254 0" << endl;	
 
 		cout << "" << endl;
 		cout << "For use during the operating system boot you have to redirect it properly." << endl;
@@ -2583,6 +2597,35 @@ int main(int argc, char* argv[])
 
 	char* name_nation = argv[1];			
 	char* name_operator = argv[2];		
+
+	int fourth_triplet_start = atoi(argv[3]);
+	if ( fourth_triplet_start == 0 )
+	{
+		fourth_triplet_start=1;
+	}	
+
+	int fourth_triplet_end = atoi(argv[4]);
+	if ( fourth_triplet_end == 0 )
+	{
+		fourth_triplet_end=254;
+	}	
+
+	if ( ( fourth_triplet_end < 1 ) || ( fourth_triplet_start < 1 ) )
+	{
+		cout << "You can't set the fourth triplet less than 1 (except the 0)." << endl;	
+		return 1;
+	}	
+	if ( ( fourth_triplet_end > 254 ) || ( fourth_triplet_start > 254 ) )
+	{
+		cout << "You can't set the fourth triplet higher than 254." << endl;	
+		return 1;
+	}	
+
+	if ( fourth_triplet_end < fourth_triplet_start )
+	{
+		cout << "The fourth triplet end is less than of the fourth triplet start." << endl;	
+		return 1;
+	}	
 
 
 	//run_from_boot
@@ -2605,7 +2648,7 @@ int main(int argc, char* argv[])
  	//					l'esistenza del file "/tmp/NOCONNECT.err".
  	//							Non esiste: connessione avvenuta
  	//							Esiste: connessione non avvenuta
-	bool run_from_boot = atoi(argv[3]);		
+	bool run_from_boot = atoi(argv[5]);		
 
 
 
@@ -2624,7 +2667,6 @@ int main(int argc, char* argv[])
 	char* IPAddressRouter;
 	bool f_connection;
 	char* IPAddressClient;
-	int k;
 	bool f_search_router;
 
 
@@ -2864,7 +2906,6 @@ int main(int argc, char* argv[])
 			return 1;
 		}	  
 
-		k=0;
 		f_search_router=true;
 		f_connection=false;
 		while (f_connection == false)
@@ -2882,14 +2923,14 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			k++;
-			ret=F_FindIPAddressFree(IPAddressRouter,k);
+			ret=F_FindIPAddressFree(IPAddressRouter,fourth_triplet_start,fourth_triplet_end);
 			if  ( ret != 0 ) 			
 			{
 				system("cat /tmp/NOCONNECT.err");
 				cout << "Connection procedure terminated with error."   << endl;	
 				return 1;
 			}
+			fourth_triplet_start++;
 
 	//INVECE CHE IN FILE, FAI GESTIONE COME ROUTER
 	strcpy(shell_command,"cat /tmp/IPAddressFree.txt");		
