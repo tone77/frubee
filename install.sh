@@ -26,4 +26,4 @@ sudo cp -f $DIR_FRUBEE/etc/* /etc ||
 
 echo "Installation complete."
 echo "Run:"
-echo "sudo frubee \"0\" \"0\" 0"
+echo "sudo frubee \"0\" \"0\" 0 0 0"
