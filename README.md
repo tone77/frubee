@@ -49,7 +49,7 @@ Compilation error
 Usage
 ------------------------------------------------------------------------------
 Once installed, run from shell (you must be root):
-sudo frubee "0" "0" 0
+sudo frubee "0" "0" 0 0 0
 and follow the onscreen instructions.
 
 Required programs
@@ -58,7 +58,7 @@ Required programs
 
 To see the explanation of the parameters received, run from shell "frubee"
 
-For deepening, read file README
+For deepening, read file README_from_ver_0.3.0
 
 
 If the connection on the client is managed by DHCP: light test
