@@ -1,0 +1,60 @@
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+
+            /\\   /\\
+           /    /
+          [@]-[@]       * * * * * * * * * * * * * * * * *
+             ^     * * *  This is a very small handbook  *
+            <_> * *     * * * * * * * * * * * * * * * * *
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+frubee receives 3 parameters:
+Nation
+Operator
+Run from boot
+
+Nation
+   "0" or put a value present in the 2° column of the file 
+   "/etc/Nations.txt"
+Operator
+   "0" or put a value present in the 2° column (the string between #10I#
+   and #10F# when present) of the files "/etc/RouterIPAddressesName.txt"
+   or "/etc/RouterOperatorsIPAddressesName.txt" or "/etc/Operators_Mobile.txt"
+Run from boot
+   0: Not run from boot / 1: Run from boot
+
+Examples
+Shows both selections (Nation and Operator):
+   frubee "0" "0" 0
+   frubee "0" "0" 1
+Don't show none selection:
+   frubee "Nation" "Operator" 0
+   frubee "Nation" "Operator" 1
+Show only the selection of the Operator:
+   frubee "Nation" "0" 0
+
+For use during the operating system boot you have to redirect it
+properly.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+If you want to add a nation, add record in file /etc/Nations.txt.
+I used the ISTAT table of the "Stati esteri" (http://www.istat.it/it/files/2011/01/CodiciStati2014.xls)
+but however, you can change the encoding of the nations.
+
+If you want to add a mobile phone operator, add record in file
+/etc/Operators_Mobile_Parameters.txt
+/etc/Operators_Mobile.txt
+
+If you want to add a router, add record in file
+/etc/RouterIPAddressesName.txt
+/etc/RouterIPAddresses.txt
+
+If you want to add a custom router of an ISP (Internet Service 
+Provider), add record in file
+/etc/RouterOperatorsIPAddressesName.txt
+/etc/RouterOperatorsIPAddresses.txt
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
