@@ -1,0 +1,80 @@
+#!/bin/sh
+#
+# frubee_dm
+#	frubee detect modem
+#
+# Copyright (C) 2015 Antonio Riontino
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
+echo "This script creates the list of device to pass to frubee for the connection of multiple 3G USB modem."
+echo "In order to have a correct detection, restart the PC and plug all modems."
+echo "If the operation is already been done (and so you want to proceed with the detection) type Y, otherwise type another letter. Then press ENTER." && read str_typed
+
+if [ "$str_typed" != Y ]  ; then
+	echo "Now restart your PC and plug all modems."
+	exit
+fi
+
+clear
+
+#
+file_device_ttyUSB=`find /dev -name ttyUSB* -a -type c | wc -l`
+file_device_ttyACM=`find /dev -name ttyACM* -a -type c | wc -l`
+if [ $file_device_ttyUSB -eq 0 ] && [ $file_device_ttyACM -eq 0 ] ; then
+	echo "1) I didn't detect the modem."
+	exit
+fi
+
+#
+str_to_search1="GSM modem"
+str_to_search2="converter now attached to"
+n_device_detected=`dmesg | grep "$str_to_search1" | grep "$str_to_search2" | wc -l`
+if [ $n_device_detected -eq 0 ] ; then
+	echo "2) I didn't detect the modem."
+	exit
+fi
+
+rm -f /tmp/device_list.txt
+dmesg | grep "$str_to_search1" | grep "$str_to_search2" | cut -c20- > /tmp/device_list_tmp.txt	#mostra dalla posizione 20 fino alla fine della riga
+while read line;
+do
+	cod_device=`echo "$line" | awk ' { print $1 } ' | cut -d':' -f1`	
+	name_device=`echo "$line" | awk ' { print $9 } '`
+	str_to_export=$cod_device" "$name_device
+	echo $str_to_export >> /tmp/device_list.txt
+done < /tmp/device_list_tmp.txt
+
+#Create the list of modems file device
+i=1
+cod_previous_device=""
+while read line;
+do
+	cod_device=`echo "$line" | awk ' { print $1 } '`	
+	name_device=`echo "$line" | awk ' { print $2 } '`	
+
+	if [ $cod_device != "$cod_previous_device" ] ; then
+		echo "-------------------------------------------------"
+		echo "Parameter to be passed to frubee for the modem "$i":"
+		i=$(($i+1))
+	else
+		echo "if not working, try:"
+	fi
+
+	echo $name_device
+	cod_previous_device=$cod_device
+
+done < /tmp/device_list.txt

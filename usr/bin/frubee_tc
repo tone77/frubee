@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# frubee_tc
+#	frubee test connection
+#
+# Copyright (C) 2015 Antonio Riontino
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
+if [ $# -ne 2 ] ; then
+	echo "The script receives two parameters." 
+	echo "   URL on which run the ping test: www......."
+	echo "   Interval of seconds between a control and the other: 2"
+	exit
+fi
+
+URL=$1
+seconds_interval=$2
+
+while [ 1 -eq 1 ]
+do
+	num_active_processes=`ps aux | grep ping | grep "$URL" | wc -l`
+	if [ $num_active_processes -eq 0 ] ; then
+		ping $URL >> /dev/null 2>&1 &
+	fi
+
+	bytes_receive_ppp0=`cat /proc/net/dev | grep ppp0 | awk ' { print $2 } '`
+	ifconfig ppp0 >> /dev/null 2>&1 || bytes_receive_ppp0="NOT CONNECTED"
+	echo "Bytes received in connection ppp0:" $bytes_receive_ppp0
+
+	bytes_receive_ppp1=`cat /proc/net/dev | grep ppp1 | awk ' { print $2 } '`
+	ifconfig ppp1 >> /dev/null 2>&1 || bytes_receive_ppp1="NOT CONNECTED"
+	echo "Bytes received in connection ppp1:" $bytes_receive_ppp1
+
+	#To test
+	bytes_receive_ppp2=`cat /proc/net/dev | grep ppp2 | awk ' { print $2 } '`
+	ifconfig ppp2 >> /dev/null 2>&1 || bytes_receive_ppp2="NOT CONNECTED"
+	echo "Bytes received in connection ppp2:" $bytes_receive_ppp2
+
+	bytes_receive_ppp3=`cat /proc/net/dev | grep ppp3 | awk ' { print $2 } '`
+	ifconfig ppp3 >> /dev/null 2>&1 || bytes_receive_ppp3="NOT CONNECTED"
+	echo "Bytes received in connection ppp3:" $bytes_receive_ppp3
+
+	bytes_receive_ppp4=`cat /proc/net/dev | grep ppp4 | awk ' { print $2 } '`
+	ifconfig ppp4 >> /dev/null 2>&1 || bytes_receive_ppp4="NOT CONNECTED"
+	echo "Bytes received in connection ppp4:" $bytes_receive_ppp4
+
+	#
+	echo "        TO STOP THE SCRIPT PRESS CTRL+C"
+	echo "------------------------------------------------"
+
+	sleep $seconds_interval
+done
