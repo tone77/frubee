@@ -1332,7 +1332,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 0.3.0");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 1.0.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -1501,6 +1501,7 @@ void F_Drawings(int par_Drawing, char par_destination[100])
  *    modem_USB_to_check
 */ 
 int F_DetectModem(char* &modem_USB_to_check,
+                  char process_frubee[10],
 				  int par_Drawing, 
 				  char* par_file_frubee_call,
 			      char* par_file_flow,
@@ -1661,7 +1662,10 @@ int F_DetectModem(char* &modem_USB_to_check,
 		strcat(shell_command,par_file_flow);
 		system(shell_command);	
 
-		strcpy(shell_command,"pppd call frubee logfile ");
+
+		strcpy(shell_command,"pppd call ");
+		strcat(shell_command,process_frubee);
+		strcat(shell_command," logfile ");
 		strcat(shell_command,par_file_flow);
 		strcat(shell_command," >> /dev/null 2>&1 &");
 		system(shell_command);	  	
@@ -1681,7 +1685,11 @@ int F_DetectModem(char* &modem_USB_to_check,
 			//Potresti mettere questa informazione in /var/log/Frubee.log
 			//cout << "Modem rilevato su file device " << modem_USB_to_check << endl;
 
-			strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | head -1");
+			strcpy(shell_command,"ps aux | grep pppd ");
+			strcat(shell_command,"| grep \"");
+			strcat(shell_command,process_frubee);
+			strcat(shell_command,"\" ");
+			strcat(shell_command,"| awk ' { print $2 } ' | head -1");
 			result_of_shell=f_result_of_shell(shell_command);
 			PID = result_of_shell;  
 
@@ -1862,7 +1870,7 @@ void F_Temporize()
 }
 
 
-int F_ConnectModemUSBMobile(char* par_Operator)
+int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB)
 {
 	//par_Operator arriva sempre valorizzato
 
@@ -1905,14 +1913,70 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 	int f_check;		//Cambia nome
 
 
+	int f_active_process_frubee;
+	int i;
+	char i_char[4];
+	char process_frubee[10];
+	int ppp_unit_number;
+	char ppp_unit_number_char[4];
+	char process_ppp[8];			//se lanci altri processi di pppd non con frubee
+									//il valore contenuto in questa variabile potrebbe 
+									//non essere corretto
 
-	file_flow="/tmp/frubee_modem";	
-	file_frubee_chat="/etc/ppp/frubee.chat";
-	file_frubee_chat_ori="/etc/ppp/frubee_ORI.chat";
-	file_frubee_call="/etc/ppp/peers/frubee";
-	file_frubee_call_ori="/etc/ppp/peers/frubee_ORI";
+
+
 	file_ipup="/etc/ppp/ip-up";
 	file_ipup_ori="/etc/ppp/ip-up_ORI_bYfRubEe";
+
+
+	string file_flow_tmp="/tmp/frubee_modem";
+	string file_frubee_chat_tmp="/etc/ppp/frubee";
+	string file_frubee_chat_ori_tmp="/etc/ppp/frubee_ORI";
+	string file_frubee_call_tmp="/etc/ppp/peers/frubee";
+	string file_frubee_call_ori_tmp="/etc/ppp/peers/frubee_ORI";	
+
+	i=1;
+	for(;;)
+	{
+		sprintf(i_char,"%d",i);
+		strcpy(process_frubee,"frubee");
+		strcat(process_frubee,i_char);
+
+		strcpy(shell_command,"ps aux | grep pppd ");
+		strcat(shell_command,"| grep \"");
+		strcat(shell_command,process_frubee);
+		strcat(shell_command,"\" ");
+		strcat(shell_command,"| wc -l");
+		result_of_shell=f_result_of_shell(shell_command);
+		f_active_process_frubee = atoi(result_of_shell);
+		if  ( f_active_process_frubee == 1 ) 	//se e' 1 vuol dire che non ci sono processi attivi		
+												//quello che trova e' se stesso
+		{
+			file_flow_tmp=file_flow_tmp+i_char;
+			file_flow=strdup(file_flow_tmp.c_str());	
+
+			file_frubee_chat_tmp=file_frubee_chat_tmp+i_char+".chat";
+			file_frubee_chat=strdup(file_frubee_chat_tmp.c_str());	
+
+			file_frubee_chat_ori_tmp= file_frubee_chat_ori_tmp+i_char+".chat";
+			file_frubee_chat_ori=strdup( file_frubee_chat_ori_tmp.c_str());	
+
+			file_frubee_call_tmp=file_frubee_call_tmp+i_char;
+			file_frubee_call=strdup(file_frubee_call_tmp.c_str());	
+
+			file_frubee_call_ori_tmp=file_frubee_call_ori_tmp+i_char;
+			file_frubee_call_ori=strdup(file_frubee_call_ori_tmp.c_str());	
+
+			ppp_unit_number=i-1;
+			sprintf(ppp_unit_number_char,"%d",ppp_unit_number);
+			strcpy(process_ppp,"ppp");
+			strcat(process_ppp,ppp_unit_number_char);
+
+			break;
+		}	
+		i++;
+	}
+
 
 	char destination_drawing[100];		
 	char destination_information[100];	
@@ -1994,21 +2058,32 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 
 	// ************************************************************	
 
-	//Rilevamento modem
-	Drawing=1;	
-	ret=F_DetectModem(modem_USB_to_check,
-					  Drawing, 
-					  file_frubee_call, 
-					  file_flow,
-	                  destination_drawing,
-	                  destination_information,
-	                  destination_message,
-	                  destination_command,
-	                  destination_command_with_direction);  
-	if  ( ret != 0 ) 			
+	if (strcmp(name_device_USB,"0") == 0)
 	{
-		return 1;		
+		//Rilevamento modem
+		Drawing=1;	
+		ret=F_DetectModem(modem_USB_to_check,
+						process_frubee,	
+						Drawing, 
+						file_frubee_call, 
+						file_flow,
+						destination_drawing,
+						destination_information,
+						destination_message,
+						destination_command,
+						destination_command_with_direction);  
+		if  ( ret != 0 ) 			
+		{
+			return 1;		
+		}
 	}
+	else
+	{
+		string modem_USB_to_check_tmp="/dev/";
+		modem_USB_to_check_tmp=modem_USB_to_check_tmp+name_device_USB;
+		modem_USB_to_check=strdup(modem_USB_to_check_tmp.c_str());
+	}
+
 
 
 	//Carica APN, DNS1, DNS2 (DNS1 e DNS2 non usati)
@@ -2035,7 +2110,9 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 	strcat(shell_command,file_frubee_call);	
 	system(shell_command);
 
-	strcpy(shell_command,"echo \"connect '/usr/sbin/chat -v -e -s -f /etc/ppp/frubee.chat'\" >> ");
+	strcpy(shell_command,"echo \"connect '/usr/sbin/chat -v -e -s -f ");
+	strcat(shell_command,file_frubee_chat);
+	strcat(shell_command,"'\" >> ");
 	strcat(shell_command,file_frubee_call);
 	system(shell_command);	
 	
@@ -2127,7 +2204,9 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 
 
 	// ******************** INIZIO CONNESSIONE *******************
-	strcpy(shell_command,"pppd call frubee logfile ");
+	strcpy(shell_command,"pppd call ");
+	strcat(shell_command,process_frubee);
+	strcat(shell_command," logfile ");
 	strcat(shell_command,file_flow);
 	strcat(shell_command," >> /dev/null 2>&1 &");
 	system(shell_command);	  	
@@ -2165,7 +2244,7 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 		return 1;  
 	}		
 
-	//Aggiunto perche' il file "/tmp/frubee_modem" all'inizio del ciclo e' 
+	//Aggiunto perche' il file "/tmp/frubee_modem[x]" all'inizio del ciclo e' 
 	//ancora vuoto e da' l'errore (poi comunque continua)
 	sleep(1);
 
@@ -2221,9 +2300,18 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 	char command1[200];
 	char command2[200];
 	char command3[200];
-	strcpy(command1,"tail -n1 /tmp/frubee_modem | awk ' { print $1 } '");			
-	strcpy(command2,"tail -n1 /tmp/frubee_modem | awk ' { print $2 } '");
-	strcpy(command3,"tail -n1 /tmp/frubee_modem | awk ' { print $3 } '");				
+
+	strcpy(command1,"tail -n1 ");			
+	strcat(command1,file_flow);			
+	strcat(command1," | awk ' { print $1 } '");			
+
+	strcpy(command2,"tail -n1 ");			
+	strcat(command2,file_flow);			
+	strcat(command2," | awk ' { print $2 } '");			
+
+	strcpy(command3,"tail -n1 ");			
+	strcat(command3,file_flow);			
+	strcat(command3," | awk ' { print $3 } '");					
 
 
 	char* c1="Connect"; 	
@@ -2322,8 +2410,11 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 
 			if  (strcmp(confirmation_check_connection,c8) == 0)	
 			{
-
-				strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | head -1");
+				strcpy(shell_command,"ps aux | grep pppd ");
+				strcat(shell_command,"| grep \"");
+				strcat(shell_command,process_frubee);
+				strcat(shell_command,"\" ");
+				strcat(shell_command,"| awk ' { print $2 } ' | head -1");
 				result_of_shell=f_result_of_shell(shell_command);
 				PID = result_of_shell;  
 				kill_pppd="SI";
@@ -2349,7 +2440,11 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 		//Oppure collego il telefonino ed e' spento
 		else if  (strcmp(check_connection,c9) == 0) 		
 		{
-			strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | head -1");
+			strcpy(shell_command,"ps aux | grep pppd ");
+			strcat(shell_command,"| grep \"");
+			strcat(shell_command,process_frubee);
+			strcat(shell_command,"\" ");
+			strcat(shell_command,"| awk ' { print $2 } ' | head -1");
 			result_of_shell=f_result_of_shell(shell_command);
 			PID = result_of_shell;  
 			kill_pppd="SI";
@@ -2481,11 +2576,21 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 		strcpy(msg,"Disconnecting in progress...");  
 		F_WriteMessage(msg,destination_command);	
 
-		strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | head -1");
+
+		strcpy(shell_command,"ps aux | grep pppd ");
+		strcat(shell_command,"| grep \"");
+		strcat(shell_command,process_frubee);
+		strcat(shell_command,"\" ");
+		strcat(shell_command,"| awk ' { print $2 } ' | head -1");
 		result_of_shell=f_result_of_shell(shell_command);
 		PID1 = result_of_shell;  
 
-		strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | head -1");
+
+		strcpy(shell_command,"ps aux | grep pppd ");
+		strcat(shell_command,"| grep \"");
+		strcat(shell_command,process_frubee);
+		strcat(shell_command,"\" ");
+		strcat(shell_command,"| awk ' { print $2 } ' | head -1");
 		result_of_shell=f_result_of_shell(shell_command);
 		PID2 = result_of_shell;  
 
@@ -2497,11 +2602,20 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 		}
 		else		
 		{	
-			strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | tail -1");
+
+			strcpy(shell_command,"ps aux | grep pppd ");
+			strcat(shell_command,"| grep \"");
+			strcat(shell_command,process_frubee);
+			strcat(shell_command,"\" ");
+			strcat(shell_command,"| awk ' { print $2 } ' | tail -1");
 			result_of_shell=f_result_of_shell(shell_command);
 			PID1 = result_of_shell;  
 
-			strcpy(shell_command,"ps aux | grep pppd | awk ' { print $2 } ' | tail -1");
+			strcpy(shell_command,"ps aux | grep pppd ");
+			strcat(shell_command,"| grep \"");
+			strcat(shell_command,process_frubee);
+			strcat(shell_command,"\" ");
+			strcat(shell_command,"| awk ' { print $2 } ' | tail -1");
 			result_of_shell=f_result_of_shell(shell_command);
 			PID2 = result_of_shell;  
 
@@ -2510,11 +2624,13 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 			system(shell_command);	
 		}
 
-		system("sleep 0.2");		//Va messo per permettere "ppp0" di disattivarsi
+		system("sleep 0.2");		//Va messo per permettere "ppp[x]" di disattivarsi
 									//Funziona anche con 0.1, ma per sicurezza ho messo 0.2
 
-		//se ppp0 non c'e', vuol dire che è disconnesso
-		strcpy(shell_command,"ifconfig ppp0 >> /dev/null 2>&1");
+		//se ppp[x] non c'e', vuol dire che è disconnesso
+		strcpy(shell_command,"ifconfig ");
+		strcat(shell_command,process_ppp);
+		strcat(shell_command," >> /dev/null 2>&1");
 		ret=system(shell_command);			
 		if  ( ret == 0 ) 	
 		{	  
@@ -2545,13 +2661,14 @@ int F_ConnectModemUSBMobile(char* par_Operator)
 int main(int argc, char* argv[])
 {
 	
-	if (argc != 6 ) 
+	if (argc != 7 ) 
 	{
-		cout << "frubee receives 5 parameters:" << endl;	
+		cout << "frubee receives 6 parameters:" << endl;	
 		cout << "Nation" << endl;	
 		cout << "Operator" << endl;	
 		cout << "Fourth triplet start" << endl;	
 		cout << "Fourth triplet end" << endl;	
+		cout << "Name device USB" << endl;	
 		cout << "Run from boot" << endl;	
 
 		cout << "" << endl;
@@ -2563,27 +2680,34 @@ int main(int argc, char* argv[])
 		cout << "   0 or put the initial number of the fourth triplet to set the range of the IP addresses to be assigned with Frubee" << endl;	
 		cout << "Fourth triplet end" << endl;	
 		cout << "   0 or put the final number of the fourth triplet to set the range of the IP addresses to be assigned with Frubee" << endl;	
+		cout << "Name device USB" << endl;	
+		cout << "   \"0\" or put the name of the device USB to connect" << endl;	
 		cout << "Run from boot" << endl;	
 		cout << "   0: Not run from boot / 1: Run from boot" << endl;	
 
 		cout << "" << endl;
 		cout << "Examples" << endl;
 		cout << "Shows both selections (Nation and Operator):" <<  endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 1" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 \"0\" 0" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 \"0\" 1" << endl;	
 		cout << "Don't show none selection:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 0" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 1" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"0\" 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"0\" 1" << endl;	
 		cout << "Show only the selection of the Operator:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"0\" 0 0 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"0\" 0 0 \"0\" 0" << endl;	
 		cout << "" << endl;
 
 		cout << "Not set any interval. The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.1 to xxx.xxx.xxx.254:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"0\" 0" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 \"0\" 0" << endl;	
 		cout << "The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.200 to xxx.xxx.xxx.254:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 200 254 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 200 254 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 200 254 \"0\" 0" << endl;	
+		cout << "   " << argv[0] << " \"0\" \"0\" 200 254 \"0\" 0" << endl;	
+		cout << "" << endl;
+
+		cout << "Set the name of the device USB to connect. It's to be used for connect multiple 3G USB modem:" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"ttyUSB0\" 0" << endl;	
+		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"ttyUSB3\" 0" << endl;	
 
 		cout << "" << endl;
 		cout << "For use during the operating system boot you have to redirect it properly." << endl;
@@ -2627,6 +2751,8 @@ int main(int argc, char* argv[])
 		return 1;
 	}	
 
+	char* name_device_USB = argv[5];
+
 
 	//run_from_boot
 	//	NOTE
@@ -2648,7 +2774,7 @@ int main(int argc, char* argv[])
  	//					l'esistenza del file "/tmp/NOCONNECT.err".
  	//							Non esiste: connessione avvenuta
  	//							Esiste: connessione non avvenuta
-	bool run_from_boot = atoi(argv[5]);		
+	bool run_from_boot = atoi(argv[6]);		
 
 
 
@@ -2707,7 +2833,7 @@ int main(int argc, char* argv[])
 	}
 
 	//Per far funzionare frubee basta cancellare solo il file /tmp/SelectedOperator.txt
-	//Il file /tmp/frubee_modem viene cancellato in F_ConnectModemUSBMobile
+	//Il file /tmp/frubee_modem[x] viene cancellato in F_ConnectModemUSBMobile
 	strcpy(shell_command,"rm -f /tmp/file_selected_nation.txt rm -f /tmp/file_selected_operator.txt rm -f /tmp/PhraseSelectOperator.txt rm -f /tmp/SelectedNation.txt rm -f /tmp/Operators_tmp.txt rm -f /tmp/router_IP_addresses_operators_tmp.txt rm -f /tmp/router_IP_addresses_tmp.txt rm -f /tmp/RouterIPAddresses_tmp.txt rm -f /tmp/router_operators_tmp.txt rm -f /tmp/router_tmp.txt rm -f /tmp/SelectNation rm -f /tmp/SelectOperator ");
 	system(shell_command);	
 
@@ -2875,7 +3001,7 @@ int main(int argc, char* argv[])
 
 	if ( f_connection_type == 1 )
 	{
-		ret=F_ConnectModemUSBMobile(str_operator);			
+		ret=F_ConnectModemUSBMobile(str_operator,name_device_USB);			
 		if  ( ret != 0 ) 			
 		{
 			return 1;
