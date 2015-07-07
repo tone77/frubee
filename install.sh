@@ -18,12 +18,18 @@ sudo cp -f $DIR_FRUBEE/frubee /usr/bin/ ||
 	exit
 }
 
-sudo cp -f $DIR_FRUBEE/etc/* /etc ||
+sudo cp -f $DIR_FRUBEE/usr/bin/* /usr/bin/ ||
 {  
 	echo "Copy error 2"
 	exit
 }
 
+sudo cp -f $DIR_FRUBEE/etc/* /etc ||
+{  
+	echo "Copy error 3"
+	exit
+}
+
 echo "Installation complete."
 echo "Run:"
-echo "sudo frubee \"0\" \"0\" 0 0 0"
+echo "sudo frubee \"0\" \"0\" 0 0 \"0\" 0"
