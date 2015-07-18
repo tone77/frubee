@@ -140,7 +140,6 @@ if not working, try:
 ttyUSB2
 ```
 
-
 **STEP 3**<br />
 Plug the second 3G USB modem (I have "Huawei E220") and run frubee_dm in the shell  
 It appears:
@@ -158,7 +157,6 @@ ttyUSB3
 if not working, try:
 ttyUSB4
 ```
-
 
 **STEP 4**<br />
 To connect the modem 1, run
@@ -183,7 +181,6 @@ Bytes received in connection ppp4: NOT CONNECTED
         TO STOP THE SCRIPT PRESS CTRL+C
 ------------------------------------------------
 ```
-
 
 **STEP 5**<br />
 Once connected the modem 1, to connect the modem 2, run
