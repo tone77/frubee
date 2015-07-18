@@ -50,7 +50,9 @@ Compilation error
 Usage
 ------------------------------------------------------------------------------
 Once installed, run from shell (you must be root):
+```
 sudo frubee "0" "0" 0 0 "0" 0
+```
 and follow the onscreen instructions.
 
 Required programs
