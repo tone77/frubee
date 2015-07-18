@@ -74,7 +74,7 @@ Example on Ubuntu 14.04 and Linux Mint 17
  1. If you're connected with "Router", to restore the original configuration
     restart PC.<br />
     If you're connected with "Mobile", to restore the original configuration
-    run
+    run<br />
     ```
     sudo ln -f -s /run/resolvconf/resolv.conf /etc/resolv.conf
     ```
