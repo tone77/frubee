@@ -78,6 +78,7 @@ Example on Ubuntu 14.04 and Linux Mint 17
     ```
     sudo ln -f -s /run/resolvconf/resolv.conf /etc/resolv.conf
     ```
+    <br />
     and then restart PC.
 
 
