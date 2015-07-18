@@ -102,9 +102,12 @@ For details read below.
     sudo mv /etc/init/network-manager.conf-ORI /etc/init/network-manager.conf
     ```
  6. If you're connected with "Router", to restore the original configuration
-    restart PC.
-    If you're connected with "Mobile", to restore the original configuration run
+    restart PC.<br />
+    If you're connected with "Mobile", to restore the original configuration run<br />
+    ```
     sudo ln -f -s /run/resolvconf/resolv.conf /etc/resolv.conf
+    ```
+    <br />
     and then restart PC.
 
 Once restored the original configuration, PC could have another IP address.
