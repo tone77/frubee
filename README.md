@@ -98,6 +98,118 @@ For details read below.
 Once restored the original configuration, PC could have another IP address.
 
 
+Connect multiple 3G USB modem (multiple pppd)
+------------------------------------------------------------------------------
+To manage the multiple connection there are also the scripts:
+frubee_dm (frubee detect modem). This script creates the list of device to pass to frubee for the connection of multiple 3G USB modem: detects only USB modem sticks, not detects mobile phone
+frubee_tc (frubee test connection). This script shows connection status of ppp0, ppp1, ppp2, ppp3, ppp4
+
+To explain the operating directions, I write an example. I tried with two modems, but Frubee can connect more.
+
+**STEP 0**
+In order to have a correct detection of modems, restart your PC.
+
+**STEP 1**
+Run in the shell
+```
+frubee_tc [URL on which run the ping test] [Interval of seconds between a control and the other]
+```
+it appears:
+```
+Bytes received in connection ppp0: NOT CONNECTED
+Bytes received in connection ppp1: NOT CONNECTED
+Bytes received in connection ppp2: NOT CONNECTED
+Bytes received in connection ppp3: NOT CONNECTED
+Bytes received in connection ppp4: NOT CONNECTED
+        TO STOP THE SCRIPT PRESS CTRL+C
+------------------------------------------------
+```
+If unplug and plug the modem, "frubee_dm" doesn't work correctly: in this case you have to restart the PC.
+
+
+**STEP 2**
+Plug the first 3G USB modem (I have "Huawei E1820") and run frubee_dm in the shell 
+It appears:
+```
+-------------------------------------------------
+Parameter to be passed to frubee for the modem 1:
+ttyUSB0
+if not working, try:
+ttyUSB1
+if not working, try:
+ttyUSB2
+```
+
+
+**STEP 3**
+Plug the second 3G USB modem (I have "Huawei E220") and run frubee_dm in the shell  
+It appears:
+```
+-------------------------------------------------
+Parameter to be passed to frubee for the modem 1:
+ttyUSB0
+if not working, try:
+ttyUSB1
+if not working, try:
+ttyUSB2
+-------------------------------------------------
+Parameter to be passed to frubee for the modem 2:
+ttyUSB3
+if not working, try:
+ttyUSB4
+```
+
+
+**STEP 4**
+To connect the modem 1, run
+```
+frubee "0" "0" 0 0 "ttyUSB0" 0
+```
+
+situation in frubee_tc once connected the modem 1
+```
+Bytes received in connection ppp0: 102
+Bytes received in connection ppp1: NOT CONNECTED
+Bytes received in connection ppp2: NOT CONNECTED
+Bytes received in connection ppp3: NOT CONNECTED
+Bytes received in connection ppp4: NOT CONNECTED
+        TO STOP THE SCRIPT PRESS CTRL+C
+------------------------------------------------
+Bytes received in connection ppp0: 432
+Bytes received in connection ppp1: NOT CONNECTED
+Bytes received in connection ppp2: NOT CONNECTED
+Bytes received in connection ppp3: NOT CONNECTED
+Bytes received in connection ppp4: NOT CONNECTED
+        TO STOP THE SCRIPT PRESS CTRL+C
+------------------------------------------------
+```
+
+
+**STEP 5**
+Once connected the modem 1, to connect the modem 2, run
+```
+frubee "0" "0" 0 0 "ttyUSB3" 0	
+```
+
+situation in frubee_tc once connected the modem 1 and modem 2
+```
+Bytes received in connection ppp0: 4810
+Bytes received in connection ppp1: 158
+Bytes received in connection ppp2: NOT CONNECTED
+Bytes received in connection ppp3: NOT CONNECTED
+Bytes received in connection ppp4: NOT CONNECTED
+        TO STOP THE SCRIPT PRESS CTRL+C
+------------------------------------------------
+Bytes received in connection ppp0: 4810
+Bytes received in connection ppp1: 242
+Bytes received in connection ppp2: NOT CONNECTED
+Bytes received in connection ppp3: NOT CONNECTED
+Bytes received in connection ppp4: NOT CONNECTED
+        TO STOP THE SCRIPT PRESS CTRL+C
+------------------------------------------------
+```
+
+
 Try Frubee on Precise Puppy 5.7.1
 ------------------------------------------------------------------------------
 If you want to try Frubee on Precise Puppy 5.7.1 read the following URL:
