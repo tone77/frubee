@@ -8,7 +8,7 @@ Description
 ------------------------------------------------------------------------------
 It's a program for GNU/Linux that connects the client to the router
 and assign IP address dynamically (to the client on which it's executed),
-without the use of the DHCP (no DHCP client, no DHCP server).
+without the use of the DHCP (no DHCP client, no DHCP server).<br />
 The program (via pppd) also allows connection to the Internet with USB modem 
 sticks or mobile phone plug to the PC with USB (not tested with smartphones).
 
