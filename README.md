@@ -127,7 +127,7 @@ Bytes received in connection ppp4: NOT CONNECTED
 If unplug and plug the modem, "frubee_dm" doesn't work correctly: in this case you have to restart the PC.
 
 
-**STEP 2**
+**STEP 2**<br />
 Plug the first 3G USB modem (I have "Huawei E1820") and run frubee_dm in the shell 
 It appears:
 ```
@@ -141,7 +141,7 @@ ttyUSB2
 ```
 
 
-**STEP 3**
+**STEP 3**<br />
 Plug the second 3G USB modem (I have "Huawei E220") and run frubee_dm in the shell  
 It appears:
 ```
