@@ -39,7 +39,7 @@ To build Frubee:
  - library libpcap
 
 Run from shell "sudo apt-get install libpcap0.8-dev" if you are building on 
-Ubuntu or derivatives and it shows a message like this:
+Ubuntu or derivatives and it shows a message like this:<br />
 frubee.cc:16:18: fatal error: pcap.h: No such file or directory
  #include <pcap.h>
 compilation terminated.
