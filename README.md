@@ -160,7 +160,7 @@ ttyUSB4
 ```
 
 
-**STEP 4**
+**STEP 4**<br />
 To connect the modem 1, run
 ```
 frubee "0" "0" 0 0 "ttyUSB0" 0
@@ -185,7 +185,7 @@ Bytes received in connection ppp4: NOT CONNECTED
 ```
 
 
-**STEP 5**
+**STEP 5**<br />
 Once connected the modem 1, to connect the modem 2, run
 ```
 frubee "0" "0" 0 0 "ttyUSB3" 0	
