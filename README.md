@@ -109,7 +109,7 @@ To explain the operating directions, I write an example. I tried with two modems
 **STEP 0**  
 In order to have a correct detection of modems, restart your PC.
 
-**STEP 1**
+**STEP 1**<br />
 Run in the shell
 ```
 frubee_tc [URL on which run the ping test] [Interval of seconds between a control and the other]
