@@ -101,8 +101,8 @@ Once restored the original configuration, PC could have another IP address.
 Connect multiple 3G USB modem (multiple pppd)
 ------------------------------------------------------------------------------
 To manage the multiple connection there are also the scripts:
-frubee_dm (frubee detect modem). This script creates the list of device to pass to frubee for the connection of multiple 3G USB modem: detects only USB modem sticks, not detects mobile phone
-frubee_tc (frubee test connection). This script shows connection status of ppp0, ppp1, ppp2, ppp3, ppp4
+ - frubee_dm (frubee detect modem). This script creates the list of device to pass to frubee for the connection of multiple 3G USB modem: detects only USB modem sticks, not detects mobile phone
+ - frubee_tc (frubee test connection). This script shows connection status of ppp0, ppp1, ppp2, ppp3, ppp4
 
 To explain the operating directions, I write an example. I tried with two modems, but Frubee can connect more.
 
