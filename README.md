@@ -90,7 +90,10 @@ aforementioned, that is not by manually editing the original configuration.
 
 For details read below.
  0. Disable DHCP server in the router
- 1. To disable NetworkManager run "sudo mv /etc/init/network-manager.conf /etc/init/network-manager.conf-ORI"
+ 1. To disable NetworkManager run<br />
+    ```
+    sudo mv /etc/init/network-manager.conf /etc/init/network-manager.conf-ORI
+    ```
  2. Restart PC
  3. Run Frubee
  4. Re-enable DHCP server in the router
