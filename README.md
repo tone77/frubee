@@ -106,7 +106,7 @@ To manage the multiple connection there are also the scripts:
 
 To explain the operating directions, I write an example. I tried with two modems, but Frubee can connect more.
 
-**STEP 0**  
+**STEP 0**<br />
 In order to have a correct detection of modems, restart your PC.
 
 **STEP 1**<br />
