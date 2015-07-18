@@ -97,7 +97,10 @@ For details read below.
  2. Restart PC
  3. Run Frubee
  4. Re-enable DHCP server in the router
- 5. To re-enable NetworkManager run "sudo mv /etc/init/network-manager.conf-ORI /etc/init/network-manager.conf"
+ 5. To re-enable NetworkManager run<br />
+    ```
+    sudo mv /etc/init/network-manager.conf-ORI /etc/init/network-manager.conf
+    ```
  6. If you're connected with "Router", to restore the original configuration
     restart PC.
     If you're connected with "Mobile", to restore the original configuration run
