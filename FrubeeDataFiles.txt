@@ -1,0 +1,16 @@
+If you want to add a nation, add record in file /etc/Nations.txt.
+I used the ISTAT table of the "Stati esteri" (http://www.istat.it/it/files/2011/01/CodiciStati2014.xls)
+but however, you can change the encoding of the nations.
+
+If you want to add a mobile phone operator, add record in file
+/etc/Operators_Mobile_Parameters.txt
+/etc/Operators_Mobile.txt
+
+If you want to add a router, add record in file
+/etc/RouterIPAddressesName.txt
+/etc/RouterIPAddresses.txt
+
+If you want to add a custom router of an ISP (Internet Service 
+Provider), add record in file
+/etc/RouterOperatorsIPAddressesName.txt
+/etc/RouterOperatorsIPAddresses.txt
