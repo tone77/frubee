@@ -52,7 +52,7 @@ Usage
 ------------------------------------------------------------------------------
 Once installed, run from shell (you must be root):
 ```
-sudo frubee "0" "0" 0 0 "0" 0
+sudo frubee
 ```
 and follow the onscreen instructions.
 
@@ -62,7 +62,7 @@ Required programs
 
 To see the explanation of the parameters received, run from shell "frubee"
 
-For deepening, read file README-from-ver-1.0.0
+For deepening, read file FrubeeDataFiles.txt
 
 
 If the connection on the client is managed by DHCP: light test
@@ -177,7 +177,7 @@ ttyUSB4
 **STEP 4**<br />
 To connect the modem 1, run
 ```
-frubee "0" "0" 0 0 "ttyUSB0" 0
+frubee --name-device-usb ttyUSB0
 ```
 
 situation in frubee_tc once connected the modem 1
@@ -201,7 +201,7 @@ Bytes received in connection ppp4: NOT CONNECTED
 **STEP 5**<br />
 Once connected the modem 1, to connect the modem 2, run
 ```
-frubee "0" "0" 0 0 "ttyUSB3" 0	
+frubee --name-device-usb ttyUSB3	
 ```
 
 situation in frubee_tc once connected the modem 1 and modem 2
@@ -223,7 +223,7 @@ Bytes received in connection ppp4: NOT CONNECTED
 ```
 
 
-Try Frubee on Precise Puppy 5.7.1
+Try Frubee on Puppy Linux distros
 ------------------------------------------------------------------------------
 If you want to try Frubee on Precise Puppy 5.7.1 read the following URL:
 http://murga-linux.com/puppy/viewtopic.php?t=99766
