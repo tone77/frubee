@@ -25,6 +25,9 @@
 #include <string.h>
 #include <unistd.h>		//per sleep
 
+#include <getopt.h>		//Command-line arguments
+
+
 #include <pcap.h>
 #include <arpa/inet.h>
 #define SNAP_LEN 1518
@@ -1332,7 +1335,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 1.0.0");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 2.0.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2058,7 +2061,7 @@ int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB)
 
 	// ************************************************************	
 
-	if (strcmp(name_device_USB,"0") == 0)
+	if (strcmp(name_device_USB,"") == 0)
 	{
 		//Rilevamento modem
 		Drawing=1;	
@@ -2658,77 +2661,206 @@ int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB)
 
 //********** Connessione Mobile ********FINE
 
-int main(int argc, char* argv[])
+//********** Command-line arguments ******** INIZIO
+void usage()
 {
-	
-	if (argc != 7 ) 
+
+	cout << ("Frubee is a program for Internet connection\n")
+	<< ("\n")
+	<< ("Usage: frubee [options]\n")
+	<< ("\n")
+	<< ("Options:\n")
+ 
+//	<< ("  -x,  --xxxxxxxxxxx       xxxxx xxxxxxxxx xx  xxxxx xxxxxxxx xxxx xxxxx\n")	//lunghezza massima riga	//commenta
+
+	<< ("  --help                   Print this help and exit\n")
+
+	<< ("  --version                Print version information and exit\n") 
+
+	<< ("  -n,  --name-nation       Set the Nation\n") 
+	<< ("                           Put a value present in the 2° column of the\n") 
+	<< ("                           file \"/etc/Nations.txt\"\n") 
+
+	<< ("  -o,  --name-operator     Set the Operator\n") 
+	<< ("                           Put a value present in the 2° column (the \n") 
+	<< ("                           string between #10I# and #10F# when present)\n") 
+	<< ("                           of the files \n") 
+	<< ("                           \"/etc/RouterIPAddressesName.txt\" or\n") 
+	<< ("                           \"/etc/RouterOperatorsIPAddressesName.txt\" or\n") 
+	<< ("                           \"/etc/Operators_Mobile.txt\"\n") 
+
+	<< ("  -s,  --fourth-triplet-start\n") 
+	<< ("                           Put the initial number of the fourth triplet\n")     
+	<< ("                           to set the range of the IP addresses to be\n")
+	<< ("                           assigned with Frubee\n")
+	<< ("                           Example: frubee -s 200\n")
+	<< ("                           The range of the IP addresses to be assigned\n")
+	<< ("                           with Frubee is from xxx.xxx.xxx.200 to\n")
+	<< ("                           xxx.xxx.xxx.254\n")
+	<< ("                           Only for the connection with the router\n")
+
+	<< ("  -e,  --fourth-triplet-end\n") 
+	<< ("                           Put the final number of the fourth triplet\n")     
+	<< ("                           to set the range of the IP addresses to be\n")
+	<< ("                           assigned with Frubee\n")
+	<< ("                           Example: frubee -e 210\n")
+	<< ("                           The range of the IP addresses to be assigned\n")
+	<< ("                           with Frubee is from xxx.xxx.xxx.1 to\n")
+	<< ("                           xxx.xxx.xxx.210\n")
+	<< ("                           Only for the connection with the router\n")
+
+	<< ("  -U,  --name-device-usb   Put the name of the device USB to connect\n") 
+	<< ("                           Only for the connection with the mobile\n") 
+
+	<< ("  --run-from-boot          Run from boot\n") 
+	<< ("                           For use during the operating system boot you\n") 
+	<< ("                           have to redirect frubee properly\n") 
+
+	<< endl;
+
+}
+
+void version_and_copyright()
+{
+	cout << ("Frubee 2.0.0\n")
+	<< ("Copyright (C) 2015 Antonio Riontino\n")
+	<< ("https://github.com/tone77/frubee\n")
+	<< ("This program is free software: for more information, see the file named COPYING\n")
+	<< endl;
+}
+
+//********** Command-line arguments ******** FINE
+
+
+int main (int argc, char **argv)
+{
+
+//********** Command-line arguments ******** INIZIO
+
+	//I followed this example:
+	//http://www.gnu.org/software/libc/manual/html_node/Getopt-Long-Option-Example.html
+
+	char* name_nation = "";			
+	char* name_operator = "" ;
+	int fourth_triplet_start = 0;
+	int fourth_triplet_end = 0;
+	char* name_device_USB = "";
+	static int run_from_boot;		//Flag set by ‘--run-from-boot’.
+	static int help_flag;			//Flag set by ‘--help’.
+	static int version_flag;		//Flag set by ‘--version’.
+
+
+	//If you don't pass the argument there aren't correct controls, regardless 
+	//of whether the parameter accepts or not the argument
+	//example: if I run
+	//frubee --name-nation
+	//in the shell there's
+	//frubee: option '--name-nation' requires an argument
+	//but the program doesn't stop
+
+
+	int c;
+
+	while (1)
 	{
-		cout << "frubee receives 6 parameters:" << endl;	
-		cout << "Nation" << endl;	
-		cout << "Operator" << endl;	
-		cout << "Fourth triplet start" << endl;	
-		cout << "Fourth triplet end" << endl;	
-		cout << "Name device USB" << endl;	
-		cout << "Run from boot" << endl;	
+		static struct option long_options[] =
+		{
+			//These options set a flag.
+			{"help",					no_argument,       &help_flag,		1},
+			{"version",					no_argument,       &version_flag,	1},
+			{"run-from-boot",			no_argument,       &run_from_boot,	1},
 
-		cout << "" << endl;
-		cout << "Nation" << endl;	
-		cout << "   \"0\" or put a value present in the 2° column of the file \"/etc/Nations.txt\"" << endl;	
-		cout << "Operator" << endl;
-		cout << "   \"0\" or put a value present in the 2° column (the string between #10I# and #10F# when present) of the files \"/etc/RouterIPAddressesName.txt\" or \"/etc/RouterOperatorsIPAddressesName.txt\" or \"/etc/Operators_Mobile.txt\"" << endl;	
-		cout << "Fourth triplet start" << endl;	
-		cout << "   0 or put the initial number of the fourth triplet to set the range of the IP addresses to be assigned with Frubee" << endl;	
-		cout << "Fourth triplet end" << endl;	
-		cout << "   0 or put the final number of the fourth triplet to set the range of the IP addresses to be assigned with Frubee" << endl;	
-		cout << "Name device USB" << endl;	
-		cout << "   \"0\" or put the name of the device USB to connect" << endl;	
-		cout << "Run from boot" << endl;	
-		cout << "   0: Not run from boot / 1: Run from boot" << endl;	
+			//These options don’t set a flag.
+			//We distinguish them by their indices.
+			{"name-nation",				required_argument, 0, 				'n'},
+			{"name-operator",			required_argument, 0, 				'o'},
+			{"fourth-triplet-start",	required_argument, 0, 				's'},
+			{"fourth-triplet-end",		required_argument, 0, 				'e'},
+			{"name-device-usb",			required_argument, 0, 				'U'},
+			{0, 0, 0, 0}
+		};
 
-		cout << "" << endl;
-		cout << "Examples" << endl;
-		cout << "Shows both selections (Nation and Operator):" <<  endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 \"0\" 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 \"0\" 1" << endl;	
-		cout << "Don't show none selection:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"0\" 0" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"0\" 1" << endl;	
-		cout << "Show only the selection of the Operator:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"0\" 0 0 \"0\" 0" << endl;	
-		cout << "" << endl;
+		//getopt_long stores the option index here.
+		int option_index = 0;
 
-		cout << "Not set any interval. The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.1 to xxx.xxx.xxx.254:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"0\" 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 0 0 \"0\" 0" << endl;	
-		cout << "The range of the IP addresses to be assigned with Frubee is from xxx.xxx.xxx.200 to xxx.xxx.xxx.254:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 200 254 \"0\" 0" << endl;	
-		cout << "   " << argv[0] << " \"0\" \"0\" 200 254 \"0\" 0" << endl;	
-		cout << "" << endl;
+		c = getopt_long (argc, argv, "e:n:o:s:U:", long_options, &option_index);
 
-		cout << "Set the name of the device USB to connect. It's to be used for connect multiple 3G USB modem:" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"ttyUSB0\" 0" << endl;	
-		cout << "   " << argv[0] << " \"Nation\" \"Operator\" 0 0 \"ttyUSB3\" 0" << endl;	
+		//Detect the end of the options.
+		if (c == -1)
+			break;
 
-		cout << "" << endl;
-		cout << "For use during the operating system boot you have to redirect it properly." << endl;
-		cout << "" << endl;
+		switch (c)
+		{
+			case 0:
+				//If this option set a flag, do nothing else now.
+				if (long_options[option_index].flag != 0)
+					break;
+				printf ("option %s", long_options[option_index].name);
+				if (optarg)
+					printf (" with arg %s", optarg);
+				printf ("\n");
+				break;
 
+			case 'e':
+				fourth_triplet_end = atoi(optarg);
+				break;
+
+			case 'n':
+				name_nation = optarg;
+				break;
+
+			case 'o':
+				name_operator = optarg;
+				break;
+
+			case 's':
+				fourth_triplet_start = atoi(optarg);
+				break;
+
+			case 'U':
+				name_device_USB = optarg;
+				break;
+
+			case '?':
+				//getopt_long already printed an error message.
+				break;
+
+			default:
+				abort ();
+		}
+	}
+
+	if (help_flag)
+	{
+		usage ();
+		return 1;
+	}
+
+	if (version_flag)
+	{
+		version_and_copyright();
+		return 1;
+	}
+
+	//Print any remaining command line arguments (not options).
+	if (optind < argc)
+	{
+		printf ("non-option ARGV-elements: ");
+		while (optind < argc)
+			printf ("%s ", argv[optind++]);
+		putchar ('\n');
 
 		return 1;
 	}
 
+//********** Command-line arguments ******** FINE
 
 
-	char* name_nation = argv[1];			
-	char* name_operator = argv[2];		
-
-	int fourth_triplet_start = atoi(argv[3]);
 	if ( fourth_triplet_start == 0 )
 	{
 		fourth_triplet_start=1;
 	}	
 
-	int fourth_triplet_end = atoi(argv[4]);
 	if ( fourth_triplet_end == 0 )
 	{
 		fourth_triplet_end=254;
@@ -2751,7 +2883,14 @@ int main(int argc, char* argv[])
 		return 1;
 	}	
 
-	char* name_device_USB = argv[5];
+
+	//cout << "name_nation: " << name_nation << endl; 
+	//cout << "name_operator: " << name_operator << endl; 
+	//cout << "fourth_triplet_start: " << fourth_triplet_start << endl; 
+	//cout << "fourth_triplet_end: " << fourth_triplet_end << endl; 
+	//cout << "name_device_USB: " << name_device_USB << endl; 
+	//cout << "run_from_boot: " << run_from_boot << endl; 
+
 
 
 	//run_from_boot
@@ -2774,7 +2913,6 @@ int main(int argc, char* argv[])
  	//					l'esistenza del file "/tmp/NOCONNECT.err".
  	//							Non esiste: connessione avvenuta
  	//							Esiste: connessione non avvenuta
-	bool run_from_boot = atoi(argv[6]);		
 
 
 
@@ -2814,7 +2952,7 @@ int main(int argc, char* argv[])
 	}	
 
 
-	if ( (strcmp(name_nation,"0") == 0) || (strcmp(name_operator,"0") == 0) )	
+	if ( (strcmp(name_nation,"") == 0) || (strcmp(name_operator,"") == 0) )	
 	{
 		strcpy(shell_command,"dialog --help >> /dev/null 2>&1");
 		ret=system(shell_command);			
@@ -2840,7 +2978,9 @@ int main(int argc, char* argv[])
 	strcpy(shell_command,"rm -f /tmp/NOCONNECT.err rm -f /tmp/SelectedOperator.txt rm -f /tmp/TypeSelectedOperator.txt");
 	system(shell_command);	
 
-	if (strcmp(name_nation,"0") == 0)
+
+
+	if (strcmp(name_nation,"") == 0)
 	{
 		//crea lo script /tmp/SelectNation (per l'elenco nazioni, legge file /etc/Nations.txt)
 		ret=F_CreatesScriptSelectNation();			
@@ -2864,6 +3004,7 @@ int main(int argc, char* argv[])
 		name_nation=result_of_shell;
 	}
 
+
 	ret=F_CreatesFileSelectedNation(name_nation);			
 	if  ( ret != 0 ) 			
 	{
@@ -2874,6 +3015,7 @@ int main(int argc, char* argv[])
 	strcpy(shell_command,"cat /tmp/SelectedNation.txt");			
 	result_of_shell=f_result_of_shell(shell_command);
 	cod_nation=result_of_shell;
+
 
 
 	//***************************************************************************
@@ -2933,7 +3075,7 @@ int main(int argc, char* argv[])
 		system(shell_command);
 	}
 
-	if (strcmp(name_operator,"0") == 0)
+	if (strcmp(name_operator,"") == 0)
 	{
 		ret=F_CreatesScriptSelectOperator(cod_nation);			
 		if  ( ret != 0 ) 			
