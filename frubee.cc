@@ -1079,11 +1079,6 @@ int F_FindIPAddressRouter(char* par_name_operator_with_nation, char* &IPAddressR
 		return 1;
 	} 
 
-	strcpy(shell_command,"echo \"nameserver ");
-	strcat(shell_command,IPAddressRouter);	
-	strcat(shell_command,"\" > /etc/resolv.conf");						
-	system(shell_command);	
-
 	return 0;
 }
 
@@ -1335,7 +1330,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 2.0.0");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 2.1.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2722,7 +2717,7 @@ void usage()
 
 void version_and_copyright()
 {
-	cout << ("Frubee 2.0.0\n")
+	cout << ("Frubee 2.1.0\n")
 	<< ("Copyright (C) 2015 Antonio Riontino\n")
 	<< ("https://github.com/tone77/frubee\n")
 	<< ("This program is free software: for more information, see the file named COPYING\n")
@@ -3188,6 +3183,13 @@ int main (int argc, char **argv)
 					system("cat /tmp/NOCONNECT.err");
 					cout << "Connection procedure terminated with error."   << endl;	
 					return 1;
+				}
+				else
+				{
+					strcpy(shell_command,"echo \"nameserver ");
+					strcat(shell_command,IPAddressRouter);	
+					strcat(shell_command,"\" > /etc/resolv.conf");						
+					system(shell_command);	
 				}
 			}
 
