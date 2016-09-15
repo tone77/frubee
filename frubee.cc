@@ -2,7 +2,7 @@
  * frubee
  *
  *
- * Copyright (C) 2015 Antonio Riontino
+ * Copyright (C) 2015-2016 Antonio Riontino
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1330,7 +1330,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 2.1.0");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 2.2.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2707,6 +2707,9 @@ void usage()
 	<< ("  -U,  --name-device-usb   Put the name of the device USB to connect\n") 
 	<< ("                           Only for the connection with the mobile\n") 
 
+	<< ("  -D,  --user-dns          Put the DNS to use\n") 
+	<< ("                           Only for the connection with the router\n") 
+
 	<< ("  --run-from-boot          Run from boot\n") 
 	<< ("                           For use during the operating system boot you\n") 
 	<< ("                           have to redirect frubee properly\n") 
@@ -2717,8 +2720,8 @@ void usage()
 
 void version_and_copyright()
 {
-	cout << ("Frubee 2.1.0\n")
-	<< ("Copyright (C) 2015 Antonio Riontino\n")
+	cout << ("Frubee 2.2.0\n")
+	<< ("Copyright (C) 2015-2016 Antonio Riontino\n")
 	<< ("https://github.com/tone77/frubee\n")
 	<< ("This program is free software: for more information, see the file named COPYING\n")
 	<< endl;
@@ -2740,6 +2743,7 @@ int main (int argc, char **argv)
 	int fourth_triplet_start = 0;
 	int fourth_triplet_end = 0;
 	char* name_device_USB = "";
+	char* address_DNS = "";
 	static int run_from_boot;		//Flag set by ‘--run-from-boot’.
 	static int help_flag;			//Flag set by ‘--help’.
 	static int version_flag;		//Flag set by ‘--version’.
@@ -2772,13 +2776,14 @@ int main (int argc, char **argv)
 			{"fourth-triplet-start",	required_argument, 0, 				's'},
 			{"fourth-triplet-end",		required_argument, 0, 				'e'},
 			{"name-device-usb",			required_argument, 0, 				'U'},
+			{"user-dns",				required_argument, 0,				'D'},
 			{0, 0, 0, 0}
 		};
 
 		//getopt_long stores the option index here.
 		int option_index = 0;
 
-		c = getopt_long (argc, argv, "e:n:o:s:U:", long_options, &option_index);
+		c = getopt_long (argc, argv, "e:n:o:s:D:U:", long_options, &option_index);
 
 		//Detect the end of the options.
 		if (c == -1)
@@ -2810,6 +2815,10 @@ int main (int argc, char **argv)
 
 			case 's':
 				fourth_triplet_start = atoi(optarg);
+				break;
+
+			case 'D':
+				address_DNS = optarg;
 				break;
 
 			case 'U':
@@ -2885,7 +2894,7 @@ int main (int argc, char **argv)
 	//cout << "fourth_triplet_end: " << fourth_triplet_end << endl; 
 	//cout << "name_device_USB: " << name_device_USB << endl; 
 	//cout << "run_from_boot: " << run_from_boot << endl; 
-
+	//cout << "address_DNS: " << address_DNS << endl; 
 
 
 	//run_from_boot
@@ -3187,7 +3196,14 @@ int main (int argc, char **argv)
 				else
 				{
 					strcpy(shell_command,"echo \"nameserver ");
-					strcat(shell_command,IPAddressRouter);	
+					if (strcmp(address_DNS,"") != 0) 
+					{
+						strcat(shell_command,address_DNS);	
+					}
+					else
+					{
+						strcat(shell_command,IPAddressRouter);	
+					}						
 					strcat(shell_command,"\" > /etc/resolv.conf");						
 					system(shell_command);	
 				}
