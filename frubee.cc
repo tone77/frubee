@@ -2955,6 +2955,13 @@ int main (int argc, char **argv)
 		return 1;
 	}	
 
+	//Per far funzionare frubee basta cancellare solo il file /tmp/SelectedOperator.txt
+	//Il file /tmp/frubee_modem[x] viene cancellato in F_ConnectModemUSBMobile
+	strcpy(shell_command,"rm -f /tmp/file_selected_nation.txt rm -f /tmp/file_selected_operator.txt rm -f /tmp/PhraseSelectOperator.txt rm -f /tmp/SelectedNation.txt rm -f /tmp/Operators_tmp.txt rm -f /tmp/router_IP_addresses_operators_tmp.txt rm -f /tmp/router_IP_addresses_tmp.txt rm -f /tmp/RouterIPAddresses_tmp.txt rm -f /tmp/router_operators_tmp.txt rm -f /tmp/router_tmp.txt rm -f /tmp/SelectNation rm -f /tmp/SelectOperator ");
+	system(shell_command);	
+
+	strcpy(shell_command,"rm -f /tmp/NOCONNECT.err rm -f /tmp/SelectedOperator.txt rm -f /tmp/TypeSelectedOperator.txt");
+	system(shell_command);	
 
 	if ( (strcmp(name_nation,"") == 0) || (strcmp(name_operator,"") == 0) )	
 	{
@@ -2973,16 +2980,6 @@ int main (int argc, char **argv)
 			return 1;
 		}
 	}
-
-	//Per far funzionare frubee basta cancellare solo il file /tmp/SelectedOperator.txt
-	//Il file /tmp/frubee_modem[x] viene cancellato in F_ConnectModemUSBMobile
-	strcpy(shell_command,"rm -f /tmp/file_selected_nation.txt rm -f /tmp/file_selected_operator.txt rm -f /tmp/PhraseSelectOperator.txt rm -f /tmp/SelectedNation.txt rm -f /tmp/Operators_tmp.txt rm -f /tmp/router_IP_addresses_operators_tmp.txt rm -f /tmp/router_IP_addresses_tmp.txt rm -f /tmp/RouterIPAddresses_tmp.txt rm -f /tmp/router_operators_tmp.txt rm -f /tmp/router_tmp.txt rm -f /tmp/SelectNation rm -f /tmp/SelectOperator ");
-	system(shell_command);	
-
-	strcpy(shell_command,"rm -f /tmp/NOCONNECT.err rm -f /tmp/SelectedOperator.txt rm -f /tmp/TypeSelectedOperator.txt");
-	system(shell_command);	
-
-
 
 	if (strcmp(name_nation,"") == 0)
 	{
