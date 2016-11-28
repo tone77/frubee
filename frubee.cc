@@ -1330,7 +1330,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 2.3.0");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 2.3.1");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2711,7 +2711,7 @@ void usage()
 	<< ("  -D,  --user-dns          Put the DNS to use\n") 
 	<< ("                           Only for the connection with the router\n") 
 
-	<< ("  -A,  --user-apn          .........\n") 
+	<< ("  -A,  --user-apn          Put the APN to use\n") 
 	<< ("                           Only for the connection with the mobile\n") 
 
 	<< ("  --run-from-boot          Run from boot\n") 
@@ -2724,7 +2724,7 @@ void usage()
 
 void version_and_copyright()
 {
-	cout << ("Frubee 2.3.0\n")
+	cout << ("Frubee 2.3.1\n")
 	<< ("Copyright (C) 2015-2016 Antonio Riontino\n")
 	<< ("https://github.com/tone77/frubee\n")
 	<< ("This program is free software: for more information, see the file named COPYING\n")
