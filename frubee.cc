@@ -1330,7 +1330,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 2.2.4");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version 2.3.0");  F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -1868,7 +1868,7 @@ void F_Temporize()
 }
 
 
-int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB)
+int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB,bool f_par_Operator_contains_APN)
 {
 	//par_Operator arriva sempre valorizzato
 
@@ -1990,15 +1990,11 @@ int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB)
 	if ( lenght_str_operator == lenght_str_processed) 		
 	{		
 		type_execution_program=0;			//Esegue da shell 		
-
-		//par_Operator e' nazione.operatore, quindi l'operatore non va modificato
 		Operator=par_Operator;
 	}		
 	else
 	{		
 		type_execution_program=1;	 		//Esegue da boot	
-
-		//par_Operator e' nazione.operatore__ForBOOT!. valorizzo l'operatore con nazione.operatore
 		Operator=str_processed;
 	}		
 
@@ -2082,15 +2078,20 @@ int F_ConnectModemUSBMobile(char* par_Operator,char* name_device_USB)
 		modem_USB_to_check=strdup(modem_USB_to_check_tmp.c_str());
 	}
 
-
-
 	//Carica APN, DNS1, DNS2 (DNS1 e DNS2 non usati)
 	struct record_OperatorParameters r_OperatorParameters;
-	ret=F_OperatorParameters(Operator, &r_OperatorParameters);		
-	if  ( ret != 0 ) 			
+	if ( f_par_Operator_contains_APN==false )
 	{
-		cout << "Connection procedure terminated with error."   << endl;	
-		return 1;		
+		ret=F_OperatorParameters(Operator, &r_OperatorParameters);
+		if  ( ret != 0 ) 			
+		{
+			cout << "Connection procedure terminated with error."   << endl;	
+			return 1;		
+		}
+	}
+	else
+	{
+		r_OperatorParameters.Operator_APN=Operator;
 	}
 
 	// ***************gestione file_frubee_call************************
@@ -2710,6 +2711,9 @@ void usage()
 	<< ("  -D,  --user-dns          Put the DNS to use\n") 
 	<< ("                           Only for the connection with the router\n") 
 
+	<< ("  -A,  --user-apn          .........\n") 
+	<< ("                           Only for the connection with the mobile\n") 
+
 	<< ("  --run-from-boot          Run from boot\n") 
 	<< ("                           For use during the operating system boot you\n") 
 	<< ("                           have to redirect frubee properly\n") 
@@ -2720,7 +2724,7 @@ void usage()
 
 void version_and_copyright()
 {
-	cout << ("Frubee 2.2.4\n")
+	cout << ("Frubee 2.3.0\n")
 	<< ("Copyright (C) 2015-2016 Antonio Riontino\n")
 	<< ("https://github.com/tone77/frubee\n")
 	<< ("This program is free software: for more information, see the file named COPYING\n")
@@ -2744,6 +2748,7 @@ int main (int argc, char **argv)
 	int fourth_triplet_end = 0;
 	char* name_device_USB = "";
 	char* address_DNS = "";
+	char* APN_operator = "";
 	static int run_from_boot;		//Flag set by ‘--run-from-boot’.
 	static int help_flag;			//Flag set by ‘--help’.
 	static int version_flag;		//Flag set by ‘--version’.
@@ -2777,13 +2782,14 @@ int main (int argc, char **argv)
 			{"fourth-triplet-end",		required_argument, 0, 				'e'},
 			{"name-device-usb",			required_argument, 0, 				'U'},
 			{"user-dns",				required_argument, 0,				'D'},
+			{"user-apn",				required_argument, 0,				'A'},
 			{0, 0, 0, 0}
 		};
 
 		//getopt_long stores the option index here.
 		int option_index = 0;
 
-		c = getopt_long (argc, argv, "e:n:o:s:D:U:", long_options, &option_index);
+		c = getopt_long (argc, argv, "e:n:o:s:A:D:U:", long_options, &option_index);
 
 		//Detect the end of the options.
 		if (c == -1)
@@ -2815,6 +2821,10 @@ int main (int argc, char **argv)
 
 			case 's':
 				fourth_triplet_start = atoi(optarg);
+				break;
+
+			case 'A':
+				APN_operator = optarg;
 				break;
 
 			case 'D':
@@ -2895,6 +2905,7 @@ int main (int argc, char **argv)
 	//cout << "name_device_USB: " << name_device_USB << endl; 
 	//cout << "run_from_boot: " << run_from_boot << endl; 
 	//cout << "address_DNS: " << address_DNS << endl; 
+	//cout << "APN_operator: " << APN_operator << endl; 
 
 
 	//run_from_boot
@@ -2936,6 +2947,7 @@ int main (int argc, char **argv)
 	bool f_connection;
 	char* IPAddressClient;
 	bool f_search_router;
+	bool f_par_Operator_contains_APN;
 
 
 	//Crea il file log /var/log/Frubee.log
@@ -2963,6 +2975,10 @@ int main (int argc, char **argv)
 	strcpy(shell_command,"rm -f /tmp/NOCONNECT.err rm -f /tmp/SelectedOperator.txt rm -f /tmp/TypeSelectedOperator.txt");
 	system(shell_command);	
 
+	if (strcmp(APN_operator,"") == 0)
+	{
+
+	//da qui indenta	
 	if ( (strcmp(name_nation,"") == 0) || (strcmp(name_operator,"") == 0) )	
 	{
 		strcpy(shell_command,"dialog --help >> /dev/null 2>&1");
@@ -3117,11 +3133,31 @@ int main (int argc, char **argv)
 	strcpy(shell_command,"cat /tmp/TypeSelectedOperator.txt");		
 	result_of_shell=f_result_of_shell(shell_command);
 	f_connection_type=atoi(result_of_shell);
+	//fino a qui indenta
+
+
+	}
+	else
+	{
+		f_connection_type=1;
+	}
+
+
 
 	//la stringa "__ForBOOT!" viene aggiunta sia per connessione con router
 	//che mobile. Per ora con connessione con router non viene considerata.
 	strcpy(String_Boot,"__ForBOOT!");
-	strcpy(str_operator,name_operator_with_nation);
+	if (strcmp(APN_operator,"") == 0)
+	{
+		strcpy(str_operator,name_operator_with_nation);
+		f_par_Operator_contains_APN=false;
+	}
+	else
+	{
+		strcpy(str_operator,APN_operator);
+		f_par_Operator_contains_APN=true;
+	}
+
 	if ( run_from_boot == true )
 	{
 		strcat(str_operator,String_Boot);
@@ -3136,7 +3172,7 @@ int main (int argc, char **argv)
 			//cout << "No network card detected."   << endl;
 		}
 
-		ret=F_ConnectModemUSBMobile(str_operator,name_device_USB);			
+		ret=F_ConnectModemUSBMobile(str_operator,name_device_USB,f_par_Operator_contains_APN);			
 		if  ( ret != 0 ) 			
 		{
 			return 1;
