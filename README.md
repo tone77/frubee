@@ -225,8 +225,9 @@ Bytes received in connection ppp4: NOT CONNECTED
 
 Try Frubee on Puppy Linux distros
 ------------------------------------------------------------------------------
-If you want to try Frubee on Precise Puppy 5.7.1, Slacko 5.7.0, Tahrpup 6.0.2 
+If you want to try Frubee on Precise Puppy 5.7.1, Slacko 5.7.0, Tahrpup 6.0.2, Tahrpup 6.0.5
 read the following URL: http://murga-linux.com/puppy/viewtopic.php?t=100924
+(URL of the old topic http://murga-linux.com/puppy/viewtopic.php?t=99766)
 
 
 
