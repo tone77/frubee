@@ -2,7 +2,7 @@
  * frubee
  *
  *
- * Copyright (C) 2015-2016 Antonio Riontino
+ * Copyright (C) 2015, 2016, 2020 Antonio Riontino
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *  
 */
+
+#define VERSION "2.4.0"
 
 #include <iostream>
 #include <stdlib.h>
@@ -1330,7 +1332,7 @@ void FrubeeInfo(char par_destination[100])
 {
 	char msg[2000];
 
-	strcpy(msg,"Frubee - Version 2.3.1");  F_WriteMessage(msg,par_destination);	//VersProgr
+	strcpy(msg,"Frubee - Version ");  	strcat(msg,VERSION);  	F_WriteMessage(msg,par_destination);	//VersProgr
 	strcpy(msg,"Designed and developed By Antonio Riontino");           F_WriteMessage(msg,par_destination);	//DevBy
 	strcpy(msg,"https://github.com/tone77/frubee");                         F_WriteMessage(msg,par_destination);	//Site
 }
@@ -2724,8 +2726,10 @@ void usage()
 
 void version_and_copyright()
 {
-	cout << ("Frubee 2.3.1\n")
-	<< ("Copyright (C) 2015-2016 Antonio Riontino\n")
+	cout <<  ("Frubee ")
+	<< (VERSION)
+	<< ("\n")
+	<< ("Copyright (C) 2015, 2016, 2020 Antonio Riontino\n")
 	<< ("https://github.com/tone77/frubee\n")
 	<< ("This program is free software: for more information, see the file named COPYING\n")
 	<< endl;
